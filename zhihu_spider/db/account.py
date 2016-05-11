@@ -2,7 +2,7 @@
 # @Author: Lich_Amnesia
 # @Email: alwaysxiaop@gmail.com
 # @Date:   2016-05-11 14:04:06
-# @Last Modified time: 2016-05-11 15:40:32
+# @Last Modified time: 2016-05-11 23:32:24
 # @FileName: account.py
 """知乎账户ORM类"""
 from sqlalchemy import Column, Integer, String, Boolean, DATETIME, TEXT
@@ -72,7 +72,6 @@ class AccountDAO(Singleton):
                 Account.email == kwargs['email']).one_or_none()
 
         if account:
-            print(kwargs)
             for k, v in kwargs.items():
                 setattr(account, k, v)
         else:
