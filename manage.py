@@ -50,8 +50,11 @@ def main():
     elif args.subcommand == 'db':
         if 'create_table' in args:
             from db.db_engine import DBEngine
+            print("create all tables")
             db_engine = DBEngine()
             db_engine.create_db()
+        else:
+            pass
 
     elif args.subcommand == 'spider':
         pass
