@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-# @Author: Comzyh
-# @Date:   2016-04-20 01:51:12
-# @Last Modified by:   Comzyh
-# @Last Modified time: 2016-04-20 01:52:08
+# @Author: Lich_Amnesia
+# @Email: alwaysxiaop@gmail.com
+# @Date:   2016-05-11 14:04:06
+# @Last Modified time: 2016-05-11 21:28:16
+# @FileName: rawdata.py
+
 
 import settings
 

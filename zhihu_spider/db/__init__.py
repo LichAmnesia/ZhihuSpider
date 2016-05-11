@@ -3,4 +3,5 @@
 from .account import Account, AccountDAO
 from .rawdata import RawDataDAO
 from .tweet import Tweet, TweetDAO
+from .answer import Answer, AnswerDAO
 # from .wordfollow import WordFollow, WordFollowDAO

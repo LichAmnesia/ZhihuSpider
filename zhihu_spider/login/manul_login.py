@@ -2,7 +2,7 @@
 # @Author: Lich_Amnesia
 # @Email: alwaysxiaop@gmail.com
 # @Date:   2016-05-11 14:04:07
-# @Last Modified time: 2016-05-11 18:19:31
+# @Last Modified time: 2016-05-11 22:55:35
 # @FileName: manul_login.py
 # 登录知乎程序
 
@@ -31,7 +31,7 @@ class LoginExecuter(object):
         # print(username, password)
         try:
             self.browser.delete_all_cookies()
-            self.browser.get(settings.LOGIN_URL['login_url'])
+            self.browser.get(settings.URL['login_url'])
             # 按照XPATH格式，检索class，如果找到认为网页加载完毕，这个classname只能检索一个变量
             normal_tab = WebDriverWait(self.browser, 10).until(
                 expected_conditions.presence_of_element_located((By.CLASS_NAME, "email")))
