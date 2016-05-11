@@ -1,2 +1,3 @@
 *.pyc
 rawdata/
+zhihu_spider/settings.py
