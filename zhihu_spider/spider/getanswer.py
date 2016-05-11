@@ -2,8 +2,10 @@
 # @Author: Lich_Amnesia
 # @Email: alwaysxiaop@gmail.com
 # @Date:   2016-05-11 22:39:06
-# @Last Modified time: 2016-05-11 23:43:00
+# @Last Modified time: 2016-05-12 00:46:47
 # @FileName: getanswer.py
+
+
 
 import _thread
 import time
@@ -16,6 +18,8 @@ from db import AccountDAO
 from db import RawDataDAO
 from db import AnswerDAO
 from bs4 import BeautifulSoup
+import html2text
+import copy
 
 import settings
 
@@ -73,27 +77,62 @@ class GetAnswer(object):
         _thread.start_new_thread(self.worker, ())
 
     def worker(self):
-        while self.soup == None:
+        while self.soup is None:
             it = self.spider.fetch(url=self.url)
             soup = BeautifulSoup(it.content)
             self.soup = soup
-
-        print(get_username())
+        self.oneanswer.uid, self.oneanswer.username = self.get_author()
         self.oneanswer.like = self.get_like()
+        self.oneanswer.questionid = self.url.split('/')[4]
+        self.oneanswer.answerid = self.url.split('/')[-1]
+        self.oneanswer.answerurl = self.url
+        self.oneanswer.comment = self.get_comment()
+        self.oneanswer.content = self.to_md(self.get_content())
+        print(self.oneanswer)
+        self.save_oneanswer(self.oneanswer)
 
+    def to_md(self, content):
+        text = html2text.html2text(content.decode('utf-8')).encode("utf-8")
+        return text
 
-     def get_username(self):
+    # 获取回答内容
+    def get_content(self):
+        soup = BeautifulSoup(self.soup.encode("utf-8"))
+        answer = soup.find("div", class_="zm-editable-content clearfix")
+        soup.body.extract()
+        soup.head.insert_after(soup.new_tag("body", **{'class': 'zhi'}))
+        soup.body.append(answer)
+        img_list = soup.find_all("img", class_="content_image lazy")
+        for img in img_list:
+            img["src"] = img["data-actualsrc"]
+        img_list = soup.find_all("img", class_="origin_image zh-lightbox-thumb lazy")
+        for img in img_list:
+            img["src"] = img["data-actualsrc"]
+        noscript_list = soup.find_all("noscript")
+        for noscript in noscript_list:
+            noscript.extract()
+        content = soup
+        return content
+
+    # 获取评论数目
+    def get_comment(self):
+        soup = self.soup
+        comment = soup.find("a", class_="meta-item toggle-comment js-toggleCommentBox").get_text(strip='\n').split(' ')[0]
+        return comment
+
+    def get_author(self):
         soup = self.soup
         if soup.find("div", class_="zm-item-answer-author-info").get_text(strip='\n') == u"匿名用户":
-            username_url = None
+            # username_url = None
+            uid = "anonymous_users"
             username = "匿名用户"
         else:
             username_tag = soup.find("div", class_="zm-item-answer-author-info").find_all("a")[1]
-            username_id = username_tag.string
-            username_url = "http://www.zhihu.com" + author_tag["href"]
-            username = None    
+            username = username_tag.string
+            # username_url = "http://www.zhihu.com" + username_tag["href"]
+            uid = username_tag["href"].split('/')[-1]
             # author = User(author_url, author_id)
-        return username_url,username
+        return uid, username
 
     def get_like(self):
         if hasattr(self, "like"):
@@ -112,7 +151,19 @@ class GetAnswer(object):
 
 
     def save_oneanswer(self, oneanswer):
-        pass
+        one = {
+            'uid': self.oneanswer.uid,
+            'username': self.oneanswer.username,
+            'like': self.oneanswer.like,
+            'questionid': self.oneanswer.questionid,
+            'answerid': self.oneanswer.answerid,
+            'answerurl':self.oneanswer.answerurl,
+            'comment':self.oneanswer.comment,
+            'content':self.oneanswer.content
+        }
+        print(one)
+        if self.spider.answer_dao:
+            self.spider.answer_dao.update_or_create_answer(one)
 
     def __update(self):
         it = self.spider.fetch_search_iter(keyword=self.wordfollow.word)
@@ -154,3 +205,6 @@ class GetAnswer(object):
             logging.info('WordFollower {0} got {1} new, and going to sleep {2} seconds.'.format(
                 word, num_new, self.fetch_interval))
             time.sleep(self.fetch_interval)
+
+if __name__ == '__main__':
+    a = GetAnswer("/question/21923064/answer/19797280")

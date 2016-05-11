@@ -2,12 +2,12 @@
 # @Author: Lich_Amnesia
 # @Email: alwaysxiaop@gmail.com
 # @Date:   2016-05-11 20:30:37
-# @Last Modified time: 2016-05-11 22:08:55
+# @Last Modified time: 2016-05-12 00:48:30
 # @FileName: answer.py
 
 
 """answer数据库存储"""
-from sqlalchemy import Column, Integer, String, Boolean, TEXT, BIGINT, DATETIME
+from sqlalchemy import Column, Integer, String, TEXT, DATETIME
 
 from .db_engine import Base
 from .db_engine import DBEngine
@@ -24,7 +24,7 @@ class Answer(Base):
     username: 作者昵称
     questionid: 问题id
     answerid: 回答id
-    answerurl: 
+    answerurl:
     content: 内容
     comment: 评论数
     like: 赞数
@@ -78,13 +78,13 @@ class AnswerDAO(Singleton):
         answer = self.session.query(Answer).filter(
             Answer.answerurl == one_answer.answerurl).one_or_none()
         if answer:
-            answer.uid = one_answer.uid
-            answer.username = one_answer.username
-            answer.content = one_answer.content
-            answer.comment = one_answer.comment
-            answer.like = one_answer.like
-            answer.fetch_timestamp = one_answer.fetch_timestamp
-            answer.timestamp = one_answer.timestamp
+            answer.uid = one_answer['uid']
+            answer.username = one_answer['username']
+            answer.content = one_answer['content']
+            answer.comment = one_answer['comment']
+            answer.like = one_answer['like']
+            answer.fetch_timestamp = one_answer['fetch_timestamp']
+            answer.timestamp = one_answer['timestamp']
             self.session.commit()
         else:
             answer = self.save_answer(one_answer)
