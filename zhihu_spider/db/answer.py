@@ -2,7 +2,7 @@
 # @Author: Lich_Amnesia
 # @Email: alwaysxiaop@gmail.com
 # @Date:   2016-05-11 20:30:37
-# @Last Modified time: 2016-05-12 00:48:30
+# @Last Modified time: 2016-05-12 00:53:28
 # @FileName: answer.py
 
 
@@ -53,19 +53,19 @@ class AnswerDAO(Singleton):
         self.session = self.engine.session
 
     def save_answer(self, one_answer):
-        if not one_answer.answerid:
+        if not one_answer['answerid']:
             return None
         answer = Answer(
-            uid=one_answer.uid,
-            username=one_answer.username,
-            questionid=one_answer.questionid,
-            answerid=one_answer.answerid,
-            answerurl=one_answer.answerurl,
-            content=one_answer.content,
-            comment=one_answer.comment,
-            like=one_answer.like,
-            fetch_timestamp=one_answer,
-            timestamp=one_answer.timestamp,
+            uid=one_answer['uid'],
+            username=one_answer['username'],
+            questionid=one_answer['questionid'],
+            answerid=one_answer['answerid'],
+            answerurl=one_answer['answerurl'],
+            content=one_answer['content'],
+            comment=one_answer['comment'],
+            like=one_answer['like'],
+            fetch_timestamp=one_answer['fetch_timestamp'],
+            timestamp=one_answer['timestamp'],
         )
         self.session.add(answer)
         self.session.commit()
@@ -73,10 +73,10 @@ class AnswerDAO(Singleton):
 
     def update_or_create_answer(self, one_answer):
         created = False
-        if not one_answer.answerid:
+        if not one_answer['answerid']:
             return created, None
         answer = self.session.query(Answer).filter(
-            Answer.answerurl == one_answer.answerurl).one_or_none()
+            Answer.answerurl == one_answer['answerurl']).one_or_none()
         if answer:
             answer.uid = one_answer['uid']
             answer.username = one_answer['username']

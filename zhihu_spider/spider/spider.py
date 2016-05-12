@@ -21,6 +21,7 @@ from db import Account
 from db import AccountDAO
 from db import RawDataDAO
 from db import AnswerDAO
+from db import QuestionDAO
 # 
 # from .parser import Parser
 # from .tweetp import TweetP
@@ -33,7 +34,7 @@ class LoginFailedException(Exception):
 
 class Spider(object):
 
-    def __init__(self, account, rawdata_dao=None, answer_dao=None):
+    def __init__(self, account, rawdata_dao=None, answer_dao=None, question_dao=None):
         """
         爬虫类， 每个使用一个账户.
 
@@ -50,9 +51,14 @@ class Spider(object):
             if answer_dao is True:
                 answer_dao = AnswerDAO()
             assert(isinstance(answer_dao, AnswerDAO))
+        if question_dao:
+            if question_dao is True:
+                question_dao = QuestionDAO()
+            assert(isinstance(question_dao, QuestionDAO))
         self.account = account
         self.rawdata_dao = rawdata_dao
         self.answer_dao = answer_dao
+        self.question_dao = question_dao
         self.s = requests.session()
         # 设置cookie
         self.set_session_cookie(session=self.s,

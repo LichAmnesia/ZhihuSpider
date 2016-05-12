@@ -2,7 +2,7 @@
 # @Author: Lich_Amnesia
 # @Email: alwaysxiaop@gmail.com
 # @Date:   2016-05-11 22:39:06
-# @Last Modified time: 2016-05-12 00:46:47
+# @Last Modified time: 2016-05-12 11:52:24
 # @FileName: getanswer.py
 
 
@@ -19,7 +19,9 @@ from db import RawDataDAO
 from db import AnswerDAO
 from bs4 import BeautifulSoup
 import html2text
-import copy
+from lxml import etree
+from lxml.html import document_fromstring
+import random
 
 import settings
 
@@ -68,13 +70,15 @@ class GetAnswer(object):
             account = account_dao.get_random_account()
         print(account)
         self.account = account
-        self.spider = Spider(account=self.account, rawdata_dao=True, answer_dao=True)
+        self.spider = Spider(account=self.account, rawdata_dao=True, answer_dao=True, question_dao=True)
         self.soup = None
         self.oneanswer = OneAnswer()
         self.start()
 
     def start(self):
-        _thread.start_new_thread(self.worker, ())
+        self.worker()
+        # 不用多线程
+        # _thread.start_new_thread(self.worker, ())
 
     def worker(self):
         while self.soup is None:
@@ -159,7 +163,9 @@ class GetAnswer(object):
             'answerid': self.oneanswer.answerid,
             'answerurl':self.oneanswer.answerurl,
             'comment':self.oneanswer.comment,
-            'content':self.oneanswer.content
+            'content':self.oneanswer.content,
+            'timestamp':self.oneanswer.timestamp,
+            'fetch_timestamp':self.oneanswer.fetch_timestamp,
         }
         print(one)
         if self.spider.answer_dao:
