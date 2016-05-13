@@ -2,7 +2,7 @@
 # @Author: Lich_Amnesia
 # @Email: alwaysxiaop@gmail.com
 # @Date:   2016-05-11 22:39:06
-# @Last Modified time: 2016-05-13 16:01:01
+# @Last Modified time: 2016-05-13 20:37:22
 # @FileName: gettopics.py
 
 # import _thread
@@ -29,7 +29,7 @@ class GetTopics(object):
     """获得一个话题下所有问题的类封装."""
 
     # /topic/19805970/questions?page=
-    def __init__(self, topicsurl, account=None):
+    def __init__(self, topicsurl, begin=1, end=1, account=None):
         # self.wordfollow_dao = WordFollowDAO()
         # self.wordfollow = self.wordfollow_dao.get_or_create(word=word)
         self.url = settings.URL['base_url'] + topicsurl
@@ -41,7 +41,7 @@ class GetTopics(object):
         self.spider = Spider(account=self.account, rawdata_dao=True, answer_dao=True, question_dao=True)
         self.soup = None
         # self.oneanswer = OneAnswer()
-        self.get_topics_questions()
+        self.get_topics_questions(begin, end)
         # self.start()
 
     def get_nofetch_question(self):
@@ -52,8 +52,8 @@ class GetTopics(object):
 
     # 就获取topics下所有问题
     # /topic/19805970/questions?page=
-    def get_topics_questions(self):
-        for id in range(3672, 6966):
+    def get_topics_questions(self, begin=1, end=1):
+        for id in range(begin, end):
             questionpage_id = str(id)
             # it = self.spider.fetch(url=self.url)
             # soup = BeautifulSoup(it.content)
