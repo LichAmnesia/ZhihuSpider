@@ -2,12 +2,13 @@
 # @Author: Lich_Amnesia
 # @Email: alwaysxiaop@gmail.com
 # @Date:   2016-05-12 10:46:37
-# @Last Modified time: 2016-05-12 11:28:05
+# @Last Modified time: 2016-05-13 12:58:01
 # @FileName: question.py
 
 
 """question数据库存储"""
 from sqlalchemy import Column, Integer, String, TEXT, DATETIME, Boolean
+from sqlalchemy.sql.expression import func
 
 from .db_engine import Base
 from .db_engine import DBEngine
@@ -43,6 +44,9 @@ class Question(Base):
     answernum = Column(Integer)
     fetch_timestamp = Column(DATETIME)
 
+    def __repr__(self):
+        """__repr__."""
+        return "<Questionid: {0}>,<Title: {1}>".format(self.questionid, self.title)
 
 class QuestionDAO(Singleton):
 
@@ -98,3 +102,7 @@ class QuestionDAO(Singleton):
 
         return created, question
 
+    def get_random_question(self):
+        q = self.session.query(Question).filter(Question.is_fetch == False and Question.answernum >= 5).order_by(func.rand()).limit(10)
+        print(q.first())
+        return q.first()
