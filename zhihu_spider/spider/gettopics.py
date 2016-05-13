@@ -2,18 +2,16 @@
 # @Author: Lich_Amnesia
 # @Email: alwaysxiaop@gmail.com
 # @Date:   2016-05-11 22:39:06
-# @Last Modified time: 2016-05-13 12:00:24
+# @Last Modified time: 2016-05-13 16:01:01
 # @FileName: gettopics.py
 
-
-
-import _thread
+# import _thread
 import time
-import logging
+# import logging
 import datetime
 from .spider import Spider
 # from db.wordfollow import WordFollowDAO
-from db import Account
+# from db import Account
 from db import AccountDAO
 from db import RawDataDAO
 from db import AnswerDAO
@@ -25,6 +23,7 @@ from lxml.html import document_fromstring
 import random
 
 import settings
+
 
 class GetTopics(object):
     """获得一个话题下所有问题的类封装."""
@@ -54,7 +53,7 @@ class GetTopics(object):
     # 就获取topics下所有问题
     # /topic/19805970/questions?page=
     def get_topics_questions(self):
-        for id in range(1517, 6966):
+        for id in range(3672, 6966):
             questionpage_id = str(id)
             # it = self.spider.fetch(url=self.url)
             # soup = BeautifulSoup(it.content)
@@ -72,9 +71,9 @@ class GetTopics(object):
             self._parse_json(it.text)
             rand_num = random.randint(50, 1000)
             if rand_num % 7 == 0:
-                time.sleep(random.randint(10,20))
+                time.sleep(random.randint(10, 20))
             elif rand_num % 10 == 0:
-                time.sleep(random.randint(5,10))
+                time.sleep(random.randint(5, 10))
 
     # 得到本页面的问题url
     def _parse_json(self, string):
@@ -109,15 +108,15 @@ class GetTopics(object):
                 if question_title.strip() != '' and question_url.strip() != '' and question_id.strip() != '':
                     add_question += 1
                     one = {
-                        'is_fetch':False,
-                        'questionid':question_id,
-                        'questionurl':question_url,
-                        'answernum':question_answerCount,
-                        'title':question_title,
-                        'detail':None,
-                        'topics':None,
-                        'comment':None,
-                        'fetch_timestamp':datetime.datetime.now(),
+                        'is_fetch': False,
+                        'questionid': question_id,
+                        'questionurl': question_url,
+                        'answernum': question_answerCount,
+                        'title': question_title,
+                        'detail': None,
+                        'topics': None,
+                        'comment': None,
+                        'fetch_timestamp': datetime.datetime.now(),
                     }
                     if self.spider.question_dao:
                         self.spider.question_dao.update_or_create_question(one)
@@ -128,7 +127,3 @@ class GetTopics(object):
         return 0
 
 
-
-    
-if __name__ == '__main__':
-    a = GetAnswer("/question/21923064/answer/19797280")
