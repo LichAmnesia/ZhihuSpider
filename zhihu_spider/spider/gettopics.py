@@ -2,7 +2,7 @@
 # @Author: Lich_Amnesia
 # @Email: alwaysxiaop@gmail.com
 # @Date:   2016-05-11 22:39:06
-# @Last Modified time: 2016-05-12 12:20:34
+# @Last Modified time: 2016-05-13 11:55:52
 # @FileName: gettopics.py
 
 
@@ -54,7 +54,7 @@ class GetTopics(object):
     # 就获取topics下所有问题
     # /topic/19805970/questions?page=
     def get_topics_questions(self):
-        for id in range(799, 9410):
+        for id in range(1517, 6966):
             questionpage_id = str(id)
             # it = self.spider.fetch(url=self.url)
             # soup = BeautifulSoup(it.content)
@@ -63,13 +63,14 @@ class GetTopics(object):
             while True:
                 it = self.spider.fetch(self.url + questionpage_id)
                 if it.status_code != 200:
+                    print("wait for 5 seconds")
                     time.sleep(5)
                     continue
                 break
 
             print(self.url + questionpage_id)
             self._parse_json(it.text)
-            rand_num = random.randint(1, 20)
+            rand_num = random.randint(50, 1000)
             if rand_num % 7 == 0:
                 time.sleep(random.randint(10,20))
             elif rand_num % 10 == 0:

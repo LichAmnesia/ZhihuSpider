@@ -43,10 +43,10 @@ class Spider(object):
         answer_dao: AnswerDAO
         """
         assert isinstance(account, Account)
-        if rawdata_dao:
-            if rawdata_dao is True:
-                rawdata_dao = RawDataDAO()
-            assert(isinstance(rawdata_dao, RawDataDAO))
+        # if rawdata_dao:
+        #     if rawdata_dao is True:
+        #         rawdata_dao = RawDataDAO()
+        #     assert(isinstance(rawdata_dao, RawDataDAO))
         if answer_dao:
             if answer_dao is True:
                 answer_dao = AnswerDAO()
@@ -56,7 +56,7 @@ class Spider(object):
                 question_dao = QuestionDAO()
             assert(isinstance(question_dao, QuestionDAO))
         self.account = account
-        self.rawdata_dao = rawdata_dao
+        # self.rawdata_dao = rawdata_dao
         self.answer_dao = answer_dao
         self.question_dao = question_dao
         self.s = requests.session()
@@ -155,7 +155,7 @@ class Spider(object):
 def get_random_spider():
     account_dao = AccountDAO()
     account = account_dao.get_random_account()
-    rawdata_dao = RawDataDAO()
+    # rawdata_dao = RawDataDAO()
     answer_dao = AnswerDAO()
     spider = Spider(account=account, rawdata_dao=rawdata_dao, answer_dao=answer_dao)
     return spider
